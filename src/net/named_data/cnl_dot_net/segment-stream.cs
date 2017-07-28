@@ -155,7 +155,7 @@ namespace net.named_data.cnl_dot_net {
           metaInfo.getFinalBlockId().isSegment())
         finalSegmentNumber_ = metaInfo.getFinalBlockId().toSegment();
 
-      // Retrieve as many segments as possible from the store.
+      // Report as many segments as possible where the node already has content.
       while (true) {
         var nextSegmentNumber = maxRetrievedSegmentNumber_ + 1;
         var nextSegment = debugGetRightmostLeaf
