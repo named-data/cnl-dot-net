@@ -116,8 +116,14 @@ namespace net.named_data.cnl_dot_net {
     /// order, note that children of the Namespace node are not necessarily
     /// added in order.
     /// </summary>
+    /// <param name="interestCount">(optional) The number of initial Interests 
+    /// to send for segments. By default this just sends an Interest for the 
+    /// first segment and waits for the response before fetching more segments, 
+    /// but if you know the number of segments you can reduce latency by 
+    /// initially requesting more segments. (However, you should not use a 
+    /// number larger than the Interest pipeline size.) If omitted, use 1.</param>
     public void
-    start() { requestNewSegments(); }
+    start(int interestCount = 1) { requestNewSegments(interestCount); }
 
     /// <summary>
     /// Get the rightmost leaf of the given namespace. Use this temporarily to
@@ -181,12 +187,15 @@ namespace net.named_data.cnl_dot_net {
         namespace_.expressInterest(interestTemplate);
       }
 
-      requestNewSegments();
+      requestNewSegments(interestPipelineSize_);
     }
 
     private void
-    requestNewSegments()
+    requestNewSegments(int maxRequestedSegments)
     {
+      if (maxRequestedSegments < 1)
+        maxRequestedSegments = 1;
+
       var childComponents = namespace_.getChildComponents();
       // First, count how many are already requested and not received.
       var nRequestedSegments = 0;
@@ -201,7 +210,7 @@ namespace net.named_data.cnl_dot_net {
         if (debugGetRightmostLeaf(child).getContent().isNull() &&
           child.debugSegmentStreamDidExpressInterest_) {
           ++nRequestedSegments;
-          if (nRequestedSegments >= interestPipelineSize_)
+          if (nRequestedSegments >= maxRequestedSegments)
             // Already maxed out on requests.
             break;
         }
@@ -209,7 +218,7 @@ namespace net.named_data.cnl_dot_net {
 
       // Now find unrequested segment numbers and request.
       var segmentNumber = maxRetrievedSegmentNumber_;
-      while (nRequestedSegments < interestPipelineSize_) {
+      while (nRequestedSegments < maxRequestedSegments) {
         ++segmentNumber;
         if (finalSegmentNumber_ >= 0 && segmentNumber > finalSegmentNumber_)
           break;
