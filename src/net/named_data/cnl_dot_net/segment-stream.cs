@@ -117,7 +117,7 @@ namespace net.named_data.cnl_dot_net {
     /// added in order.
     /// </summary>
     public void
-    start() { namespace_.expressInterest(); }
+    start() { requestNewSegments(); }
 
     /// <summary>
     /// Get the rightmost leaf of the given namespace. Use this temporarily to
@@ -145,7 +145,6 @@ namespace net.named_data.cnl_dot_net {
       if (!(contentNamespace.getName().size() >= namespace_.getName().size() + 1 &&
         contentNamespace.getName()[namespace_.getName().size()].isSegment()))
         // Not a segment, ignore.
-        // Debug: If this is the first call, we still need to request segments.
         return;
 
       // TODO: Use the Namespace mechanism to validate the Data packet.
@@ -182,7 +181,12 @@ namespace net.named_data.cnl_dot_net {
         namespace_.expressInterest(interestTemplate);
       }
 
-      // Request new segments.
+      requestNewSegments();
+    }
+
+    private void
+    requestNewSegments()
+    {
       var childComponents = namespace_.getChildComponents();
       // First, count how many are already requested and not received.
       var nRequestedSegments = 0;
@@ -195,7 +199,7 @@ namespace net.named_data.cnl_dot_net {
         // Debug: Check the leaf for content, but use the immediate child
         // for _debugSegmentStreamDidExpressInterest.
         if (debugGetRightmostLeaf(child).getContent().isNull() &&
-            child.debugSegmentStreamDidExpressInterest_) {
+          child.debugSegmentStreamDidExpressInterest_) {
           ++nRequestedSegments;
           if (nRequestedSegments >= interestPipelineSize_)
             // Already maxed out on requests.
@@ -212,7 +216,7 @@ namespace net.named_data.cnl_dot_net {
 
         var segment = namespace_[Name.Component.fromSegment(segmentNumber)];
         if (!debugGetRightmostLeaf(segment).getContent().isNull() ||
-            segment.debugSegmentStreamDidExpressInterest_)
+          segment.debugSegmentStreamDidExpressInterest_)
           // Already got the data packet or already requested.
           continue;
 
