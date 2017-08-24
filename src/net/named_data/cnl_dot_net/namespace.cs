@@ -115,6 +115,24 @@ namespace net.named_data.cnl_dot_net {
     }
 
     /// <summary>
+    /// A helper method to return getChild(new Name.Component(value)).
+    /// </summary>
+    public Namespace
+    getChild(String value) { return getChild(new Name.Component(value)); }
+
+    /// <summary>
+    /// A helper method to return getChild(new Name.Component(value)).
+    /// </summary>
+    public Namespace
+    getChild(byte[] value) { return getChild(new Name.Component(value)); }
+
+    /// <summary>
+    /// A helper method to return getChild(new Name.Component(value)).
+    /// </summary>
+    public Namespace
+    getChild(Blob value) { return getChild(new Name.Component(value)); }
+      
+    /// <summary>
     /// Get a child (or descendant), creating it if needed. This is equivalent
     /// to namespace[descendantName]. If a child is created, this calls
     /// callbacks as described by addOnNameAdded (but does not call the
@@ -160,6 +178,24 @@ namespace net.named_data.cnl_dot_net {
     /// </summary>
     public Namespace
     this[Name.Component component] { get { return getChild(component); } }
+
+    /// <summary>
+    /// Return getChild(value).
+    /// </summary>
+    public Namespace
+    this[String value] { get { return getChild(value); } }
+
+    /// <summary>
+    /// Return getChild(value).
+    /// </summary>
+    public Namespace
+    this[byte[] value] { get { return getChild(value); } }
+
+    /// <summary>
+    /// Return getChild(value).
+    /// </summary>
+    public Namespace
+    this[Blob value] { get { return getChild(value); } }
 
     /// <summary>
     /// Return getChild(descendantName).
