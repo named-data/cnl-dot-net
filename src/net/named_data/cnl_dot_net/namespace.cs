@@ -533,7 +533,7 @@ namespace net.named_data.cnl_dot_net {
     // The key is the callback ID. The value is the OnContentSet function.
     private Dictionary<long, OnContentSet> onContentSetCallbacks_ =
       new Dictionary<long, OnContentSet>();
-    private TransformContent transformContent_ = null;
+    public TransformContent transformContent_ = null;
     private Interest defaultInterestTemplate_;
     private static long lastCallbackId_ = 0;
     private static object lastCallbackIdLock_ = new object();
