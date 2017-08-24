@@ -89,8 +89,8 @@ namespace net.named_data.cnl_dot_net {
         return;
 
       if (segmentNamespace != null) {
-        segments_.Add(segmentNamespace.getContent());
-        totalSize_ += segmentNamespace.getContent().size();
+        segments_.Add((Blob)segmentNamespace.getContent());
+        totalSize_ += ((Blob)segmentNamespace.getContent()).size();
       }
       else {
         // Finished. We don't need the callback anymore.

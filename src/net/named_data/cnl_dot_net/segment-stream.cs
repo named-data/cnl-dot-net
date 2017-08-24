@@ -165,7 +165,7 @@ namespace net.named_data.cnl_dot_net {
         var nextSegmentNumber = maxRetrievedSegmentNumber_ + 1;
         var nextSegment = debugGetRightmostLeaf
           (namespace_[Name.Component.fromSegment(nextSegmentNumber)]);
-        if (nextSegment.getContent().isNull())
+        if (nextSegment.getContent() == null)
           break;
 
         maxRetrievedSegmentNumber_ = nextSegmentNumber;
@@ -207,8 +207,8 @@ namespace net.named_data.cnl_dot_net {
         var child = namespace_[component];
         // Debug: Check the leaf for content, but use the immediate child
         // for _debugSegmentStreamDidExpressInterest.
-        if (debugGetRightmostLeaf(child).getContent().isNull() &&
-          child.debugSegmentStreamDidExpressInterest_) {
+        if (debugGetRightmostLeaf(child).getContent() == null &&
+            child.debugSegmentStreamDidExpressInterest_) {
           ++nRequestedSegments;
           if (nRequestedSegments >= maxRequestedSegments)
             // Already maxed out on requests.
@@ -224,7 +224,7 @@ namespace net.named_data.cnl_dot_net {
           break;
 
         var segment = namespace_[Name.Component.fromSegment(segmentNumber)];
-        if (!debugGetRightmostLeaf(segment).getContent().isNull() ||
+        if (debugGetRightmostLeaf(segment).getContent() != null ||
           segment.debugSegmentStreamDidExpressInterest_)
           // Already got the data packet or already requested.
           continue;

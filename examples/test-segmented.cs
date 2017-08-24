@@ -22,6 +22,7 @@ using System.Threading;
 using System.Collections.Generic;
 
 using net.named_data.jndn;
+using net.named_data.jndn.util;
 using net.named_data.cnl_dot_net;
 
 namespace TestCnlDotNet {
@@ -70,7 +71,7 @@ namespace TestCnlDotNet {
     {
       if (contentNamespace == nameSpace) {
         Console.Out.WriteLine
-          ("Got segmented content size " + contentNamespace.getContent().size());
+        ("Got segmented content size " + ((Blob)contentNamespace.getContent()).size());
         enabled[0] = false;
       }
     }

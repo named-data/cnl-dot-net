@@ -29,7 +29,7 @@ namespace net.named_data.cnl_dot_net {
   public delegate void OnContentSet
     (Namespace nameSpace, Namespace contentNamespace, long callbackId);
 
-  public delegate void OnContentTransformed(Data data, Blob content);
+  public delegate void OnContentTransformed(Data data, object content);
 
   public delegate void TransformContent
     (Data data, OnContentTransformed onContentTransformed);
@@ -265,10 +265,14 @@ namespace net.named_data.cnl_dot_net {
     /// <summary>
     /// Get the content attached to this Namespace object. Note that
     /// getContent() may be different than the content in the attached Data
-    /// packet (for example if the content is decrypted).
+    /// packet (for example if the content is decrypted). In the default
+    /// behavior, the content is the Blob content of the Data packet, but may be 
+    /// a different type as determined by the attached handler.
     /// </summary>
-    /// <returns>The content Blob, or an isNull Blob if not set.</returns>
-    public Blob
+    /// <returns>The content which is a Blob or other type as determined by the
+    /// attached handler. You must cast to the correct type. If the content is
+    /// not set, return null.</returns>
+    public object
     getContent() { return content_; }
 
     /// <summary>
@@ -473,7 +477,7 @@ namespace net.named_data.cnl_dot_net {
     /// <param name="content"The content which may have been processed from the
     /// Data packet, e.g. by decrypting.</param>
     private void
-    onContentTransformed(Data data, Blob content)
+    onContentTransformed(Data data, object content)
     {
       data_ = data;
       content_ = content;
@@ -510,7 +514,7 @@ namespace net.named_data.cnl_dot_net {
     }
 
     public void
-    debugOnContentTransformed(Data data, Blob content)
+    debugOnContentTransformed(Data data, object content)
     {
       onContentTransformed(data, content);
     }
@@ -521,7 +525,7 @@ namespace net.named_data.cnl_dot_net {
     private Dictionary<Name.Component, Namespace> children_ = new
       Dictionary<Name.Component, Namespace>();
     private Data data_ = null;
-    private Blob content_ = new Blob();
+    private object content_ = null;
     private Face face_ = null;
     // The key is the callback ID. The value is the OnNameAdded function.
     private Dictionary<long, OnNameAdded> onNameAddedCallbacks_ =
