@@ -55,6 +55,14 @@ namespace net.named_data.cnl_dot_net {
     }
 
     /// <summary>
+    /// Create a Namespace object with the given name, and with no parent. This
+    /// is the root of the name tree. To create child nodes, use
+    /// myNamespace.getChild("foo") or myNamespace["foo"].
+    /// </summary>
+    /// <param name="uri">The name URI string.</param>
+    public Namespace(string uri) : this(new Name(uri)) {}
+
+    /// <summary>
     /// Get the name of this node in the name tree. This includes the name
     /// components of parent nodes. To get the name component of just this node,
     /// use getName()[-1].
