@@ -33,17 +33,16 @@ namespace TestCnlDotNet {
     static void
     Main(string[] args)
     {
-      Face face = new Face("memoria.ndn.ucla.edu");
-      Namespace page = new Namespace
-        (new Name
-          ("/ndn/edu/ucla/remap/demo/ndn-js-test/named-data.net/project/ndn-ar2011.html/%FDX%DC5B"));
+      var face = new Face("memoria.ndn.ucla.edu");
+      var page = new Namespace
+        ("/ndn/edu/ucla/remap/demo/ndn-js-test/named-data.net/project/ndn-ar2011.html/%FDX%DC5B");
       page.setFace(face);
 
       bool[] enabled = { true };
       page.addOnContentSet
         (delegate(Namespace nameSpace, Namespace contentNamespace, long callbackId) {
           onContentSet(nameSpace, contentNamespace, callbackId, enabled); });
-      SegmentedContent segmentedContent = new SegmentedContent(page);
+      var segmentedContent = new SegmentedContent(page);
       segmentedContent.start();
 
       while (enabled[0]) {

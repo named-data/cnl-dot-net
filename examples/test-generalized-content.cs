@@ -35,16 +35,15 @@ namespace TestCnlDotNet {
     static void
     Main(string[] args)
     {
-      Face face = new Face("localhost");
-      Namespace prefix = new Namespace
-        (new Name("/icear/user/peter/object_recognizer/%FE%01/yolo"));
+      var face = new Face("localhost");
+      var prefix = new Namespace("/icear/user/peter/object_recognizer/%FE%01/yolo");
       prefix.setFace(face);
 
       bool[] enabled = { true };
       prefix.addOnContentSet
         (delegate(Namespace nameSpace, Namespace contentNamespace, long callbackId) {
           onContentSet(nameSpace, contentNamespace, callbackId, enabled); });
-      GeneralizedContent generalizedContent = new GeneralizedContent(prefix);
+      var generalizedContent = new GeneralizedContent(prefix);
       generalizedContent.start();
 
       while (enabled[0]) {
