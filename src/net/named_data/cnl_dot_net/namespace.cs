@@ -19,6 +19,7 @@
 
 using System;
 using System.Collections.Generic;
+using ILOG.J2CsMapping.Util.Logging;
 using net.named_data.jndn;
 using net.named_data.jndn.util;
 
@@ -546,5 +547,7 @@ namespace net.named_data.cnl_dot_net {
     private static long lastCallbackId_ = 0;
     private static object lastCallbackIdLock_ = new object();
     public bool debugSegmentStreamDidExpressInterest_ = false;
+    private static Logger logger_ = ILOG.J2CsMapping.Util.Logging.Logger
+      .getLogger(typeof(Namespace).FullName);
   }
 }
