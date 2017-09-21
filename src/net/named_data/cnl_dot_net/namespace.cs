@@ -365,6 +365,7 @@ namespace net.named_data.cnl_dot_net {
 
       if (interestTemplate == null)
         interestTemplate = defaultInterestTemplate_;
+      logger_.log(Level.FINE, "Namespace: Express interest " + name_.toUri());
       face.expressInterest
         (name_, interestTemplate, this,
          ExponentialReExpress.makeOnTimeout(face, this, null));
