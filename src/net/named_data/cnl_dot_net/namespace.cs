@@ -341,11 +341,26 @@ namespace net.named_data.cnl_dot_net {
     setFace(Face face) { face_ = face; }
 
     /// <summary>
+    /// Set the Face used when expressInterest is called on this or child nodes
+    /// (unless a child node has a different Face).
+    /// TODO: Replace this by a mechanism for requesting a Data object which is
+    /// more general than a Face network operation.
+    /// </summary>
+    /// <param name="face">The Face object. If this Namespace object already has
+    /// a Face object, it is replaced.</param>
+    public void
+    setMaxInterestLifetime(double maxInterestLifetime)
+    { 
+      maxInterestLifetime_ = maxInterestLifetime; 
+    }
+
+    /// <summary>
     /// Call expressInterest on this (or a parent's) Face where the interest
     /// name is the name of this Namespace node. When the Data packet is
     /// received this calls setData, so you should use a callback with
     /// addOnContentSet. This uses ExponentialReExpress to re-express a
-    /// timed-out interest with longer lifetimes.
+    /// timed-out interest with longer lifetimes, with a maximum determined by 
+    /// setMaxInterestLifetime().
     /// TODO: How to alert the application on a final interest timeout?
     /// TODO: Replace this by a mechanism for requesting a Data object which is
     /// more general than a Face network operation.
@@ -368,7 +383,8 @@ namespace net.named_data.cnl_dot_net {
       logger_.log(Level.FINE, "Namespace: Express interest " + name_.toUri());
       face.expressInterest
         (name_, interestTemplate, this,
-         ExponentialReExpress.makeOnTimeout(face, this, null));
+         ExponentialReExpress.makeOnTimeout
+           (face, this, null, getMaxInterestLifetime()));
     }
 
     /// <summary>
@@ -413,6 +429,25 @@ namespace net.named_data.cnl_dot_net {
       }
 
       return null;
+    }
+
+    /// <summary>
+    /// Get the maximum Interest lifetime that was set on this or a parent node.
+    /// </summary>
+    /// <returns>The  maximum Interest lifetime, or the default if not set on 
+    /// this or any parent.</returns>
+    private double
+    getMaxInterestLifetime()
+    {
+      var nameSpace = this;
+      while (nameSpace != null) {
+        if (nameSpace.maxInterestLifetime_ >= 0)
+          return nameSpace.maxInterestLifetime_;
+        nameSpace = nameSpace.parent_;
+      }
+
+      // Return the default.
+      return 16000.0;
     }
 
     /// <summary>
@@ -548,6 +583,7 @@ namespace net.named_data.cnl_dot_net {
     private static long lastCallbackId_ = 0;
     private static object lastCallbackIdLock_ = new object();
     public bool debugSegmentStreamDidExpressInterest_ = false;
+    double maxInterestLifetime_ = -1; // -1 if not specified.
     private static Logger logger_ = ILOG.J2CsMapping.Util.Logging.Logger
       .getLogger(typeof(Namespace).FullName);
   }
