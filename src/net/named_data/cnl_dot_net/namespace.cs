@@ -50,6 +50,7 @@ namespace net.named_data.cnl_dot_net {
     public Namespace(Name name)
     {
       name_ = new Name(name);
+      root_ = this;
 
       defaultInterestTemplate_ = new Interest();
       defaultInterestTemplate_.setInterestLifetimeMilliseconds(4000.0);
@@ -88,10 +89,7 @@ namespace net.named_data.cnl_dot_net {
     public Namespace
     getRoot()
     {
-      var result = this;
-      while (result.parent_ != null)
-        result = result.parent_;
-      return result;
+      return root_;
     }
 
     /// <summary>
@@ -483,6 +481,7 @@ namespace net.named_data.cnl_dot_net {
     {
       var child = new Namespace(new Name(name_).append(component));
       child.parent_ = this;
+      child.root_ = root_;
       children_[component] = child;
 
       if (fireCallbacks) {
@@ -566,6 +565,8 @@ namespace net.named_data.cnl_dot_net {
 
     private Name name_;
     private Namespace parent_ = null;
+    // parent_ and root_ may be updated by createChild.
+    private Namespace root_;
     // The key is a Name.Component. The value is the child Namespace.
     private Dictionary<Name.Component, Namespace> children_ = new
       Dictionary<Name.Component, Namespace>();
