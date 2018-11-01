@@ -51,9 +51,6 @@ namespace net.named_data.cnl_dot_net {
     {
       name_ = new Name(name);
       root_ = this;
-
-      defaultInterestTemplate_ = new Interest();
-      defaultInterestTemplate_.setInterestLifetimeMilliseconds(4000.0);
     }
 
     /// <summary>
@@ -376,8 +373,6 @@ namespace net.named_data.cnl_dot_net {
         throw new Exception
           ("A Face object has not been set for this or a parent");
 
-      if (interestTemplate == null)
-        interestTemplate = defaultInterestTemplate_;
       logger_.log(Level.FINE, "Namespace: Express interest " + name_.toUri());
       face.expressInterest
         (name_, interestTemplate, this,
@@ -580,7 +575,6 @@ namespace net.named_data.cnl_dot_net {
     private Dictionary<long, OnContentSet> onContentSetCallbacks_ =
       new Dictionary<long, OnContentSet>();
     public TransformContent transformContent_ = null;
-    private Interest defaultInterestTemplate_;
     private static long lastCallbackId_ = 0;
     private static object lastCallbackIdLock_ = new object();
     public bool debugSegmentStreamDidExpressInterest_ = false;
